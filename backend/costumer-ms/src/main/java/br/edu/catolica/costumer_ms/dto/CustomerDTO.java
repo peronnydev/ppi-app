@@ -11,6 +11,8 @@ public record CustomerDTO(
 
         @Schema(description = "Nome do cliente", minLength = 3)
         @NotBlank(message = "Campo name é obrigatório")
+        @Size(min = 2, message = "O nome não deve ser menor que 2 caracteres")
+        @Size(max = 300, message = "O nome deve ser menor que 300 caracteres")
         String name,
 
         @Schema(description = "Email do cliente", example = ("cliente@email.com"))
@@ -19,7 +21,7 @@ public record CustomerDTO(
         String email,
 
         @Schema(description = "CPF do cliente (somente números)", example = "12345678900")
-        @CPF(message = "cpf inválido")
+        @CPF(message = "Cpf inválido")
         @NotBlank(message = "Campo cpf é obrigatório")
         String cpf,
 

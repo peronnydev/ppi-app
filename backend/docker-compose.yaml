@@ -1,0 +1,41 @@
+networks:
+  delivery-net:
+    driver: bridge
+volumes:
+  postgres-delivery-data:
+
+services:
+   postgres-delivery:
+     image: postgres:15
+     container_name: postgres-delivery
+     environment:
+       POSTGRES_DB: customer_db
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: acer
+     ports:
+       - "5432:5432"
+     volumes:
+       - postgres-delivery-data:/var/lib/postgresql/data
+       - ./postgres-init:/docker-entrypoint-initdb.d
+     networks: [ delivery-net ]
+     healthcheck:
+       test: [ "CMD-SHELL", "pg_isready -U postgres -d customer_db" ]
+       interval: 5s
+       timeout: 5s
+       retries: 10
+
+   customer-ms:
+    image: peronnydev/customer-ms:latest
+    container_name: customer-ms
+    environment:
+      DB_HOST: postgres-delivery
+      DB_PORT: 5432
+      DB_NAME: customer_db
+      DB_USER: postgres
+      DB_PASSWORD: acer
+    ports:
+      - "8081:8081"
+    networks: [delivery-net]
+    depends_on:
+      postgres-delivery:
+        condition: service_healthy
