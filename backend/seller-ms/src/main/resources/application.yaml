@@ -1,0 +1,21 @@
+server:
+  servlet:
+    context-path: /seller-app
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:seller_db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:acer}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    fail-on-missing-locations: true

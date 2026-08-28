@@ -39,3 +39,19 @@ services:
     depends_on:
       postgres-delivery:
         condition: service_healthy
+
+   seller-ms:
+    image: peronnydev/seller-ms:latest
+    container_name: seller-ms
+    environment:
+      DB_HOST: postgres-delivery
+      DB_PORT: 5432
+      DB_NAME: seller_db
+      DB_USER: postgres
+      DB_PASSWORD: acer
+    ports:
+      - "8082:8082"
+    networks: [delivery-net]
+    depends_on:
+      postgres-delivery:
+        condition: service_healthy
