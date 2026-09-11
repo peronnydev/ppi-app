@@ -19,3 +19,11 @@ spring:
     baseline-on-migrate: true
     validate-on-migrate: true
     fail-on-missing-locations: true
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: 6379
+
+seller-service:
+  menu:
+    url: http://${SELLER_SERVICE_HOST:localhost}:${SELLER_SERVICE_PORT:8082}/seller-app/api/v1/seller
