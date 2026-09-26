@@ -3,9 +3,9 @@ package br.edu.catolica.customer_ms.controller;
 import br.edu.catolica.customer_ms.dto.OrderRequestDTO;
 import br.edu.catolica.customer_ms.dto.ResponseDTO;
 import br.edu.catolica.customer_ms.service.OrderEventService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +19,7 @@ public class OrderController {
     private final OrderEventService orderEventService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> createdOrder(@RequestBody OrderRequestDTO orderRequestDTO){
+    public ResponseEntity<ResponseDTO> createdOrder(@RequestBody @Valid OrderRequestDTO orderRequestDTO){
         orderEventService.send(orderRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDTO("Pedido enviado com sucesso", 201));

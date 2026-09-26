@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 public interface CustomerMapper {
 
     @Mapping(target = "address.id", ignore = true)
+    @IgnoreBaseEntityProperties
     Customer dtoToEntity(CustomerDTO customerDTO);
 
 }

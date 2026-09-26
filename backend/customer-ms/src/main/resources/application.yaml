@@ -21,7 +21,7 @@ spring:
     fail-on-missing-locations: true
   data:
     redis:
-      host: ${REDIS_HOST:redis}
+      host: ${REDIS_HOST:localhost}
       port: 6379
   kafka:
     bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
@@ -33,7 +33,6 @@ spring:
       close-timeout: 10s
       # Controla se a aplicação deve falhar caso o Kafka esteja indisponível no startup
       fail-fast: false
-
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -42,21 +41,18 @@ spring:
       properties:
         # Garante que o tipo da classe seja enviado no cabeçalho da mensagem
         spring.json.add.type.headers: true
-
     consumer:
       group-id: customer-ms
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      # Se o producer enviar um JSON inválido, este deserializer impede que o consumidor
+      # entre em um loop infinito de falhas de leitura.
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         # O evento é publicado por outro serviço (seller-service), então ignoramos
         # o header de tipo dele e desserializamos direto para o nosso próprio contrato
         spring.json.use.type.headers: false
-        spring.json.value.default.type: com.luciano.customer.customer_ms.dto.response.OrderResponseDTO
-        spring.json.trusted.packages: com.luciano.customer.customer_ms
-
-        # Se o producer enviar um JSON inválido, este deserializer impede que o consumidor
-        # entre em um loop infinito de falhas de leitura.
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: br.edu.catolica.customer_ms.dto
 
 seller-service:
   menu:

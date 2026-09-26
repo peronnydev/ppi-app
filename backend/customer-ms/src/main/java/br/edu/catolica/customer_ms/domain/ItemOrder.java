@@ -8,15 +8,18 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class ItemOrder extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    private Long productId;
 
     @NotNull
     @Positive

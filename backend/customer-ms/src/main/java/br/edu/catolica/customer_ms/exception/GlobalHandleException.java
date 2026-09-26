@@ -45,4 +45,25 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler {
         return  new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler({CustomerNotFoundException.class, ProductNotFoundException.class})
+    public ResponseEntity<ErrorResponseDTO> handleNotFoundException(RuntimeException ex, WebRequest req){
+        return buildError(ex, req, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({SaveOrderException.class, EventOrderException.class})
+    public ResponseEntity<ErrorResponseDTO> handleOrderException(RuntimeException ex, WebRequest req){
+        return buildError(ex, req, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private ResponseEntity<ErrorResponseDTO> buildError(RuntimeException ex, WebRequest req, HttpStatus status){
+        var errorResponse = ErrorResponseDTO.builder()
+                .apiPath(req.getDescription(false))
+                .message(ex.getMessage())
+                .httpStatus(status.value())
+                .errorTime(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(errorResponse, status);
+    }
+
 }

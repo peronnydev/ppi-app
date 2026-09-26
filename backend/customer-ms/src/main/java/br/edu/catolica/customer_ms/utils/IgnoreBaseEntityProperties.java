@@ -7,11 +7,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// createdAt, updatedAt e isActive não são expostos pelo @Builder das entidades
+// (ficam no BaseEntity) e são preenchidos pelo @PrePersist
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 @Mapping(target = "id", ignore = true)
-@Mapping(target = "createdAt", ignore = true)
-@Mapping(target = "updatedAt", ignore = true)
-@Mapping(target = "isActive", ignore = true)
 public @interface IgnoreBaseEntityProperties {
 }
